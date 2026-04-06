@@ -8,14 +8,14 @@ SBOX = [0xE, 0x4, 0xD, 0x1,
 
 def comp128_toy(ki, rand):
     #ki and rand are 16 bits each instead of 16 bytes
-    # Expand to 32 bits
+    #expand to 32 bits (concatenate rand and ki)
     A = []
     for i in range(16):
         bit_ki = (ki >> i) & 1
         bit_rand = (rand >> i) & 1
         A.append(bit_ki ^ bit_rand)
 
-    # 4 rounds of mixing instead of 8
+    #4 rounds of mixing instead of 8
     for _ in range(4):
         new_A = []
         for i in range(16):
@@ -29,7 +29,7 @@ def comp128_toy(ki, rand):
 
         A = new_A
 
-    # Compress back to 16-bit output
+    #compress back to 16-bit output
     out = 0
     for i in range(16):
         out |= (A[i] << i)
@@ -61,9 +61,10 @@ def main():
         out = comp128_toy(true_ki, rand)
         samples.append((rand, out))
 
-    print("[*] Recovering Ki...")
+    print("recovering ki..")
 
     recovered = recover_ki(samples)
+
 
     print(f"Recovered Ki: {recovered:04x}")
     print(f"Match: {recovered == true_ki}")
